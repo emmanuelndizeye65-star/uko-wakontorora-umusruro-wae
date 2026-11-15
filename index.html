@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MilkTrack 2.0 | Smart Dairy Management</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">M</div>
+            <div>
+                <h2>MilkTrack</h2>
+                <small>SMART DAIRY SYSTEM</small>
+            </div>
+        </div>
+
+        <nav>
+            <p class="nav-label">main menu</p>
+            <button class="nav-link active" data-page="dashboard">▦ Dashboard</button>
+            <button class="nav-link" data-page="cows">♧ Cow Management</button>
+            <button class="nav-link" data-page="production">♧ Milk Production</button>
+            <button class="nav-link" data-page="analytics,">▥ Analytics</button>
+            <button class="nav-link" data-page="alerts,">♧ Smart Alerts</button>
+            <button class="nav-link" data-page="reports">▤ Reports</button>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <p>MilkTrack 2.0</p>
+            <small>Smart farming, better decisions.</small>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <h1 id="page-title">Dashboard</h1>
+                <p id="current-date"></p>
+            </div>
+            <div class="top-right">
+                <span class="status">● System Active</span>
+                <div class="avatar">MT</div>
+            </div>
+        </header>
+
+        <!-- DASHBOARD -->
+        <section class="page active" id="dashboard">
+
+            <div class="welcome">
+                <div>
+                    <h2>Welcome to MilkTrack</h2>
+                    <p>Monitor your dairy farm and make smarter decisions.</p>
+                </div>
+                <button class="primary-btn" onclick="showPage('production')">
+                    + Record Milk
+                </button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <p>Today's Milk Production</p>
+                    <h2 id="today-total">0 L</h2>
+                    <small>Across all registered cows</small>
+                </div>
+
+                <div class="stat-card">
+                    <p>Registered Cows</p>
+                    <h2 id="cow-total">0</h2>
+                    <small>Total farm animals</small>
+                </div>
+
+                <div class="stat-card">
+                    <p>Average Per Cow</p>
+                    <h2 id="average-total">0 L</h2>
+                    <small>Today's average production</small>
+                </div>
+
+                <div class="stat-card">
+                    <p>Production Records</p>
+                    <h2 id="record-total">0</h2>
+                    <small>Records entered today</small>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="panel chart-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Production Overview</h3>
+                            <p>Milk production over the last seven days</p>
+                        </div>
+                    </div>
+                    <canvas id="productionChart"></canvas>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h3>Farm Overview</h3>
+                    </div>
+                    <div class="overview-item">
+                        <span>Registered cows</span>
+                        <strong id="overview-cows">0</strong>
+                    </div>
+                    <div class="overview-item">
+                        <span>Today's production</span>
+                        <strong id="overview-milk">0 L</strong>
+                    </div>
+                    <div class="overview-item">
+                        <span>Active alerts</span>
+                        <strong id="overview-alerts">0</strong>
+                    </div>
+                    <div class="overview-note">
+                        Keep your records updated to improve farm management.
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3>Recent Production Records</h3>
+                    <button class="text-btn" onclick="showPage('production')">View all</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Cow ID</th>
+                                <th>Date</th>
+                                <th>Session</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-records"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- COW MANAGEMENT -->
+        <section class="page" id="cows">
+            <div class="section-intro">
+                <div>
+                    <h2>Cow Management</h2>
+                    <p>Register and manage individual cows on your farm.</p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>Register a New Cow</h3>
+                <form id="cow-form" class="form-grid">
+                    <input id="cow-id" placeholder="Cow identification (e.g. COW-006)" required>
+                    <input id="cow-name" placeholder="Cow name" required>
+                    <select id="cow-breed" required>
+                        <option value="">Select breed</option>
+                        <option>Friesian</option>
+                        <option>Jersey</option>
+                        <option>Crossbreed</option>
+                        <option>Other</option>
+                    </select>
+                    <button class="primary-btn" type="submit">Add Cow</button>
+                </form>
+            </div>
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3>Registered Cows</h3>
+                    <input id="cow-search" class="search-input" placeholder="Search cows...">
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Identification</th>
+                                <th>Name</th>
+                                <th>Breed</th>
+                                <th>Total Production</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cow-table"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- MILK PRODUCTION -->
+        <section class="page" id="production">
+            <div class="section-intro">
+                <div>
+                    <h2>Milk Production</h2>
+                    <p>Record morning and evening milk production.</p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>New Production Record</h3>
+                <form id="production-form" class="form-grid">
+                    <select id="record-cow" required>
+                        <option value="">Select cow</option>
+                    </select>
+                    <input type="date" id="record-date" required>
+                    <select id="record-session" required>
+                        <option value="">Select session</option>
+                        <option>Morning</option>
+                        <option>Evening</option>
+                    </select>
+                    <input type="number" id="record-quantity" min="0.1" step="0.1" placeholder="Milk quantity (litres)" required>
+                    <button class="primary-btn" type="submit">Save Record</button>
+                </form>
+            </div>
+
+            <div class="panel">
+                <h3>Production History</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Cow ID</th>
+                                <th>Date</th>
+                                <th>Session</th>
+                                <th>Quantity</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="production-table"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ANALYTICS -->
+        <section class="page" id="analytics">
+            <div class="section-intro">
+                <div>
+                    <h2>Production Analytics</h2>
+                    <p>Understand farm performance through production data.</p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <p>Total Recorded Milk</p>
+                    <h2 id="all-time-total">0 L</h2>
+                </div>
+                <div class="stat-card">
+                    <p>Highest Daily Production</p>
+                    <h2 id="highest-total">0 L</h2>
+                </div>
+                <div class="stat-card">
+                    <p>Average Daily Production</p>
+                    <h2 id="daily-average">0 L</h2>
+                </div>
+            </div>
+
+            <div class="panel chart-panel">
+                <h3>Daily Production Trends</h3>
+                <canvas id="analyticsChart"></canvas>
+            </div>
+
+            <div class="panel">
+                <h3>Production by Cow</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Cow ID</th>
+                                <th>Name</th>
+                                <th>Total Milk</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cow-performance"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SMART ALERTS -->
+        <section class="page" id="alerts">
+            <div class="section-intro">
+                <div>
+                    <h2>Smart Alerts</h2>
+                    <p>Identify unusual changes and missing production records.</p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>Farm Notifications</h3>
+                <div id="alert-list"></div>
+            </div>
+        </section>
+
+        <!-- REPORTS -->
+        <section class="page" id="reports">
+            <div class="section-intro">
+                <div>
+                    <h2>Farm Reports</h2>
+                    <p>Review and print your dairy production information.</p>
+                </div>
+                <button class="primary-btn" onclick="window.print()">Print Report</button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <p>Total Cows</p>
+                    <h2 id="report-cows">0</h2>
+                </div>
+                <div class="stat-card">
+                    <p>Total Milk</p>
+                    <h2 id="report-milk">0 L</h2>
+                </div>
+                <div class="stat-card">
+                    <p>Total Records</p>
+                    <h2 id="report-records">0</h2>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>Complete Production Report</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Cow ID</th>
+                                <th>Date</th>
+                                <th>Session</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody id="report-table"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2026 MilkTrack 2.0 | Smart Dairy Farm Management System</p>
+        </footer>
+
+    </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
